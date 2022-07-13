@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Cqrs\Commands\CreateProduct;
+namespace Src\Products\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

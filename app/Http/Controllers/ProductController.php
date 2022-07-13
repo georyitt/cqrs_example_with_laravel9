@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Src\Cqrs\CommandBus;
-use Src\Cqrs\Commands\CreateProduct\CreateProductCommand;
-use Src\Cqrs\Queries\GetAll\GetProductsQuery;
-use Src\Cqrs\Queries\GetById\GetProductByIdQuery;
-use Src\Cqrs\QueryBus;
+use Src\Common\Domain\Bus\Command\CommandBus;
+use Src\Common\Domain\Bus\Query\QueryBus;
+use Src\Products\Application\Features\Commands\CreateProduct\CreateProductCommand;
+use Src\Products\Application\Features\Queries\GetAll\GetProductsQuery;
+use Src\Products\Application\Features\Queries\GetById\GetProductByIdQuery;
 use Symfony\Component\HttpFoundation\Response as STATUS;
 
 class ProductController extends Controller
 {
     public function __construct(
-        private CommandBus $commandBus,
-        private QueryBus $queryBus
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus   $queryBus
     ){}
 
     public function create(Request $request)
@@ -25,9 +25,9 @@ class ProductController extends Controller
         ]);
 
         $result = $this->commandBus->handle(
-            command: new CreateProductCommand(
-                name: $request->name,
-                price: $request->price
+            request: new CreateProductCommand(
+                name: $request->get('name'),
+                price: $request->get('price')
             )
         );
 
@@ -41,17 +41,18 @@ class ProductController extends Controller
 
     public function get() {
         return response()->json(
-            data: ['message' => $this->queryBus->handle(new GetProductsQuery()),],
+            data: ['message' => $this->queryBus->handle(request: new GetProductsQuery())],
             status: STATUS::HTTP_OK,
             headers: ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
             options: JSON_UNESCAPED_UNICODE);
     }
 
     public function getById(int $id) {
-        return response()->json([
-            'message' => $this->queryBus->handle(new GetProductByIdQuery($id)),
-        ],STATUS::HTTP_OK, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
-            JSON_UNESCAPED_UNICODE);
+        return response()->json(
+            data: ['message' => $this->queryBus->handle(request: new GetProductByIdQuery($id))],
+            status: STATUS::HTTP_OK,
+            headers: ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+            options: JSON_UNESCAPED_UNICODE);
     }
 
 
