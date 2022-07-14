@@ -12,8 +12,8 @@ class GetProductByIdQueryHandler
         private readonly UnitOfWork $unitOfWork
     ){}
 
-    public function handle(GetProductByIdQuery $command): mixed
+    public function handle(GetProductByIdQuery $query): mixed
     {
-        return $this->unitOfWork->productRepository->getById($command->id);
+        return $this->unitOfWork->productRepository->getById($query->id);
     }
 }

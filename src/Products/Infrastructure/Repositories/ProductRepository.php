@@ -4,7 +4,6 @@ namespace Src\Products\Infrastructure\Repositories;
 
 use Exception;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Src\Products\Domain\Contracts\IProductRepository;
 use Src\Products\Domain\Models\Product;
 
@@ -27,21 +26,11 @@ class ProductRepository implements IProductRepository
         return Product::find($id);
     }
 
-    public function register(string $name, int $price): bool
+    public function register(string $name, int $price): void
     {
-        try {
-            Product::create([
-                'name' => $name,
-                'price' => $price
-            ]);
-        }
-        catch (Exception $ex) {
-            if (config("APP_ENV") == "local") {
-                Log::error($ex->getMessage());
-            }
-            return false;
-        }
-
-        return true;
+        Product::create([
+            'name' => $name,
+            'price' => $price
+        ]);
     }
 }

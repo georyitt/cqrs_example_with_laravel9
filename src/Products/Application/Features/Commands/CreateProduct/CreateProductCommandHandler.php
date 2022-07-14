@@ -12,8 +12,8 @@ class CreateProductCommandHandler
         private readonly UnitOfWork $unitOfWork
     ){}
 
-    public function handle(CreateProductCommand $command): ?bool
+    public function handle(CreateProductCommand $command)
     {
-        return $this->unitOfWork->productRepository->register($command->name, $command->price);
+       $this->unitOfWork->productRepository->register($command->name, $command->price);
     }
 }

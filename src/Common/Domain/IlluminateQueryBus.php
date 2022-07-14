@@ -4,13 +4,13 @@ namespace Src\Common\Domain;
 
 use Illuminate\Bus\Dispatcher;
 
-class IlluminateCommandBus implements CommandBus
+class IlluminateQueryBus implements QueryBus
 {
     public function __construct(private readonly Dispatcher $bus) {}
 
-    public function dispatch($command): void
+    public function dispatch($query): mixed
     {
-        $this->bus->dispatch($command);
+        return $this->bus->dispatch($query);
     }
 
     public function map(array $map): void

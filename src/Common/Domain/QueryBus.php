@@ -2,8 +2,8 @@
 
 namespace Src\Common\Domain;
 
-interface CommandBus
+interface QueryBus
 {
-    public function dispatch($command): void;
+    public function dispatch($query): mixed;
     public function map(array $map): void;
 }

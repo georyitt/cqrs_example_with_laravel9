@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Src\Common\Domain\CommandBus;
+use Src\Common\Domain\QueryBus;
 use Src\Products\Application\Features\Commands\CreateProduct\CreateProductCommand;
 use Src\Products\Application\Features\Queries\GetAll\GetProductsQuery;
 use Src\Products\Application\Features\Queries\GetById\GetProductByIdQuery;
@@ -13,6 +14,7 @@ class ProductController extends Controller
 {
     public function __construct(
         private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus
     ){}
 
     public function create(Request $request)
@@ -27,13 +29,12 @@ class ProductController extends Controller
             price: $request->get('price')
         );
 
-        $result = $this->commandBus->dispatch(
+        $this->commandBus->dispatch(
             command: $command
         );
 
         return response()->json(
-            data: ['message' => $result ? "successful" : "error"],
-            status: $result ? STATUS::HTTP_CREATED : STATUS::HTTP_BAD_REQUEST,
+            status: STATUS::HTTP_CREATED,
             headers: ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
             options: JSON_UNESCAPED_UNICODE
         );
@@ -41,7 +42,7 @@ class ProductController extends Controller
 
     public function get() {
         return response()->json(
-            data: ['message' => $this->commandBus->dispatch(command: new GetProductsQuery())],
+            data: ['message' => $this->queryBus->dispatch(query: new GetProductsQuery())],
             status: STATUS::HTTP_OK,
             headers: ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
             options: JSON_UNESCAPED_UNICODE);
@@ -49,7 +50,7 @@ class ProductController extends Controller
 
     public function getById(int $id) {
         return response()->json(
-            data: ['message' => $this->commandBus->dispatch(command: new GetProductByIdQuery($id))],
+            data: ['message' => $this->queryBus->dispatch(query: new GetProductByIdQuery($id))],
             status: STATUS::HTTP_OK,
             headers: ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
             options: JSON_UNESCAPED_UNICODE);

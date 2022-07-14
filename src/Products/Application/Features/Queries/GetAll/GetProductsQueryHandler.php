@@ -12,7 +12,7 @@ class GetProductsQueryHandler
         private readonly UnitOfWork $unitOfWork
     ){}
 
-    public function handle(GetProductsQuery $command): Collection|array|CollectionEloquent
+    public function handle(GetProductsQuery $query): Collection|array|CollectionEloquent
     {
         return $this->unitOfWork->productRepository->getAll();
     }
