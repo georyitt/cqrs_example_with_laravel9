@@ -2,22 +2,18 @@
 
 namespace Src\Products\Application\Features\Commands\CreateProduct;
 
-use Src\Common\Domain\Bus\Command\Command;
-use Src\Common\Domain\Bus\Command\CommandHandler;
+use Src\Common\Core\Domain\Bus\Command\Command;
+use Src\Common\Core\Domain\Bus\Command\CommandHandler;
 use Src\Common\Infrastructure\UnitOfWork;
-use Src\Products\Infrastructure\Repositories\ProductRepository;
 
-class CreateProductCommandHandler implements CommandHandler
+class CreateProductCommandHandler
 {
     public function __construct(
         private readonly UnitOfWork $unitOfWork
     ){}
 
-    /**
-     * @param CreateProductCommand<Command> $request
-     */
-    public function execute(Command $request): ?bool
+    public function handle(CreateProductCommand $command): ?bool
     {
-        return $this->unitOfWork->productRepository->register($request->name, $request->price);
+        return $this->unitOfWork->productRepository->register($command->name, $command->price);
     }
 }

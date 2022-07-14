@@ -2,9 +2,7 @@
 
 namespace Src\Products\Application\Features\Commands\CreateProduct;
 
-use Src\Common\Domain\Bus\Command\Command;
-
-class CreateProductCommand implements Command
+class CreateProductCommand
 {
     public function __construct(
         public readonly string $name,
